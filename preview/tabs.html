@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 22px 20px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-1); }
+  .tab { font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--fg-3); padding: 10px 14px; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; display: inline-flex; align-items: center; gap: 6px; }
+  .tab:hover { color: var(--fg-1); }
+  .tab.active { color: var(--primary-700); border-bottom-color: var(--primary-600); }
+  .count { font-size: 11px; background: var(--neutral-100); color: var(--fg-2); padding: 1px 7px; border-radius: 999px; font-weight: 500; }
+  .tab.active .count { background: var(--primary-50); color: var(--primary-700); }
+  .pane { padding: 14px 4px; font-size: 13px; color: var(--fg-2); }
+</style>
+</head>
+<body>
+  <div class="tabs">
+    <button class="tab active">Overview <span class="count">3</span></button>
+    <button class="tab">Activity</button>
+    <button class="tab">Members <span class="count">12</span></button>
+    <button class="tab">Settings</button>
+  </div>
+  <div class="pane">Underline indicator, 2px. Hover lifts color to fg-1; active uses primary-600.</div>
+</body>
+</html>

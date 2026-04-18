@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 18px 20px; }
+  .row { display:flex; align-items:baseline; gap: 16px; padding: 6px 0; border-bottom: 1px dashed var(--border-1); }
+  .row:last-child { border: none; }
+  .token { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); width: 84px; }
+  .meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg-4); margin-left: auto; }
+  .label { color: var(--fg-1); }
+</style>
+</head>
+<body>
+  <div class="row"><span class="token">--text-4xl</span><span class="label" style="font-size:48px; font-weight:700; line-height:1.1;">Display 48</span><span class="meta">Roboto 700 · 48/1.1</span></div>
+  <div class="row"><span class="token">--text-2xl</span><span class="label" style="font-size:30px; font-weight:700;">Heading 30</span><span class="meta">Roboto 700 · 30/1.15</span></div>
+  <div class="row"><span class="token">--text-xl</span><span class="label" style="font-size:24px; font-weight:500;">Section 24</span><span class="meta">Roboto 500 · 24/1.35</span></div>
+  <div class="row"><span class="token">--text-md</span><span class="label" style="font-size:18px;">Large body 18 · for long-form reading</span><span class="meta">Roboto 400 · 18/1.55</span></div>
+  <div class="row"><span class="token">--text-base</span><span class="label" style="font-size:16px;">Body 16 · the default for paragraphs</span><span class="meta">Roboto 400 · 16/1.55</span></div>
+  <div class="row"><span class="token">--text-sm</span><span class="label" style="font-size:14px; color: var(--fg-2);">Small 14 · helper text, captions</span><span class="meta">Roboto 400 · 14/1.55</span></div>
+  <div class="row"><span class="token">--text-xs</span><span class="label" style="font-size:12px; font-weight:500; text-transform:uppercase; color: var(--fg-3);">Eyebrow 12 · uppercase</span><span class="meta">Roboto 500 · 12 · wide</span></div>
+</body>
+</html>

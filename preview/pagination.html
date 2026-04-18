@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 20px; font-family: var(--font-sans); font-size: 13px; }
+  .pag { display: flex; gap: 4px; align-items: center; justify-content: center; }
+  .pg { min-width: 32px; height: 32px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid var(--border-1); background: var(--bg-elev-1); color: var(--fg-1); cursor: pointer; font-weight: 500; }
+  .pg:hover { background: var(--neutral-100); }
+  .pg.active { background: var(--primary-600); color: #fff; border-color: var(--primary-600); }
+  .pg.disabled { color: var(--fg-4); cursor: not-allowed; background: transparent; }
+  .ellipsis { color: var(--fg-3); padding: 0 6px; }
+  .status { text-align: center; color: var(--fg-3); margin-top: 10px; font-size: 12px; font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+  <div class="pag">
+    <button class="pg disabled">←</button>
+    <button class="pg">1</button>
+    <button class="pg active">2</button>
+    <button class="pg">3</button>
+    <button class="pg">4</button>
+    <span class="ellipsis">…</span>
+    <button class="pg">28</button>
+    <button class="pg">→</button>
+  </div>
+  <div class="status">Showing 26–50 of 1,378</div>
+</body>
+</html>

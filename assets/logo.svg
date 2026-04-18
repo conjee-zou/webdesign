@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" width="140" height="32">
+  <g fill="none" fill-rule="evenodd">
+    <rect x="2" y="4" width="24" height="24" rx="6" fill="#4741d8"></rect>
+    <path d="M9 11.5 L14 20 L19 11.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+    <text x="34" y="22" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111110">Webdesign</text>
+  </g>
+</svg>
