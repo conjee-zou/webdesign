@@ -20,12 +20,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Publish site to gh-pages branch
+      - name: Stage site contents
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude='_site' \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.DS_Store' \
+            --exclude='uploads' \
+            --exclude='SKILL.md' \
+            ./ _site/
+          touch _site/.nojekyll
+          ls -la _site
+
+      - name: Publish _site to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: .
-          exclude_assets: '.github,.git,.DS_Store,uploads,SKILL.md'
+          publish_dir: ./_site
           force_orphan: true
           commit_message: "chore(pages): refresh gh-pages with latest index.html"
