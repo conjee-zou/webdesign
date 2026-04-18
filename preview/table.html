@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg); }
+  body { padding: 18px 20px; font-family: var(--font-sans); font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; background: var(--bg-elev-1); border: 1px solid var(--border-1); border-radius: 10px; overflow: hidden; }
+  th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--fg-3); text-transform: uppercase; background: var(--neutral-50); border-bottom: 1px solid var(--border-1); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-1); color: var(--fg-1); }
+  tr:last-child td { border-bottom: none; }
+  .who { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 28px; height: 28px; border-radius: 999px; background: var(--primary-100); color: var(--primary-700); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 11px; }
+  .badge { display: inline-flex; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--success-100); color: #166534; font-weight: 500; }
+  .muted { color: var(--fg-3); }
+</style>
+</head>
+<body>
+  <table>
+    <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Last active</th></tr></thead>
+    <tbody>
+      <tr><td><div class="who"><span class="avatar">AM</span>Alex Morgan</div></td><td>Admin</td><td><span class="badge">Active</span></td><td class="muted">2 min ago</td></tr>
+      <tr><td><div class="who"><span class="avatar" style="background:var(--warning-100);color:#92400e;">JK</span>Jamie Kwon</div></td><td>Editor</td><td><span class="badge">Active</span></td><td class="muted">3 hours ago</td></tr>
+      <tr><td><div class="who"><span class="avatar" style="background:var(--neutral-200);color:var(--neutral-700);">RS</span>Riya Shah</div></td><td>Viewer</td><td><span class="badge" style="background:var(--neutral-100);color:var(--fg-2);">Invited</span></td><td class="muted">—</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

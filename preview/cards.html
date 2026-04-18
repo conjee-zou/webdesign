@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg); }
+  body { padding: 24px 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .card { background: var(--bg-elev-1); border: 1px solid var(--border-1); border-radius: 14px; box-shadow: var(--shadow-sm); padding: 16px; display:flex; flex-direction: column; gap: 6px; transition: box-shadow var(--dur-base) var(--ease-out); }
+  .card:hover { box-shadow: var(--shadow-md); }
+  .title { font-size: 15px; font-weight: 600; color: var(--fg-1); }
+  .desc { font-size: 13px; color: var(--fg-2); line-height: 1.45; }
+  .meta { font-size: 11px; color: var(--fg-3); font-family: var(--font-mono); text-transform: uppercase; margin-top: 4px; }
+  .thumb { height: 56px; border-radius: 10px; background: linear-gradient(135deg, var(--primary-100), var(--primary-50)); margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="thumb" style="background: var(--neutral-100);"></div>
+    <div class="meta">Feature</div>
+    <div class="title">Faster workspace sync</div>
+    <div class="desc">Changes now propagate to teammates in under 200ms, even across regions.</div>
+  </div>
+  <div class="card">
+    <div class="thumb"></div>
+    <div class="meta">Changelog</div>
+    <div class="title">Bulk edit rows</div>
+    <div class="desc">Select multiple rows in any table and edit shared fields at once.</div>
+  </div>
+  <div class="card">
+    <div class="thumb" style="background: var(--neutral-200);"></div>
+    <div class="meta">Guide</div>
+    <div class="title">Set up SSO</div>
+    <div class="desc">Enable single sign-on with Okta, Google, or any SAML 2.0 provider.</div>
+  </div>
+</body>
+</html>

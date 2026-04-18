@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--neutral-900); color: var(--neutral-100); }
+  body { padding: 20px; font-family: var(--font-sans); font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 24px; }
+  .brand { display:flex; flex-direction: column; gap: 10px; }
+  .mark { display:flex; align-items:center; gap: 8px; color: #fff; font-weight: 600; font-size: 15px; }
+  .mark .m { width: 22px; height: 22px; border-radius: 5px; background: var(--primary-500); display:flex; align-items:center; justify-content:center; font-size: 11px; font-weight: 700; }
+  .tag { color: var(--neutral-400); font-size: 12px; line-height: 1.5; max-width: 220px; }
+  .col h5 { margin: 0 0 10px; font-size: 11px; text-transform: uppercase; color: var(--neutral-400); font-weight: 600; }
+  .col ul { list-style: none; margin: 0; padding: 0; display:flex; flex-direction:column; gap: 6px; }
+  .col a { color: var(--neutral-200); font-size: 13px; }
+  .col a:hover { color: #fff; }
+  .bottom { border-top: 1px solid var(--neutral-800); margin-top: 20px; padding-top: 14px; display: flex; justify-content: space-between; color: var(--neutral-400); font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="brand">
+      <div class="mark"><div class="m">W</div>Webdesign</div>
+      <div class="tag">A modern UI system built on CSS tokens. Drop-in components, fully themeable.</div>
+    </div>
+    <div class="col"><h5>Product</h5><ul><li><a>Components</a></li><li><a>Templates</a></li><li><a>Changelog</a></li></ul></div>
+    <div class="col"><h5>Resources</h5><ul><li><a>Docs</a></li><li><a>Guides</a></li><li><a>API</a></li></ul></div>
+    <div class="col"><h5>Company</h5><ul><li><a>About</a></li><li><a>Careers</a></li><li><a>Contact</a></li></ul></div>
+  </div>
+  <div class="bottom"><span>© 2026 Webdesign</span><span>Privacy · Terms · Security</span></div>
+</body>
+</html>

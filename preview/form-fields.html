@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; font-family: var(--font-sans); }
+  .field { display:flex; flex-direction:column; gap: 6px; position: relative; }
+  label { font-size: 13px; font-weight: 500; color: var(--fg-1); }
+  .hint { font-size: 12px; color: var(--fg-3); }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--fg-1); }
+  .check input { width: 16px; height: 16px; accent-color: var(--primary-600); }
+
+  /* ---------------------------------------------------------- */
+  /* Input wrap — single source of truth for input + icons + err */
+  /* Structure:                                                   */
+  /* <label>…</label>                                             */
+  /* <div class="input-wrap" [error="…"]>                         */
+  /*   <i class="input-icon-left">…</i>     (optional)            */
+  /*   <input />                                                  */
+  /*   <i class="input-icon-right">…</i>    (optional)            */
+  /* </div>                                                       */
+  /* ---------------------------------------------------------- */
+  .input-wrap { position: relative; }
+  .input-wrap > input {
+    font-family: var(--font-sans); font-size: 14px;
+    width: 100%; box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid var(--border-2); border-radius: var(--radius-sm);
+    background: #fff; color: var(--fg-1);
+    transition: border var(--dur-fast), box-shadow var(--dur-fast);
+  }
+  .input-wrap > input:focus { outline: none; border-color: var(--primary-500); box-shadow: var(--shadow-ring); }
+  .input-wrap > input[readonly] { caret-color: transparent; }
+  .input-wrap:has(> .input-icon-left) > input { padding-left: 36px; }
+  .input-wrap:has(> .input-icon-right) > input { padding-right: 36px; }
+
+  .input-icon-left, .input-icon-right {
+    position: absolute; top: 10px;
+    width: 20px; height: 20px;
+    display: grid; place-items: center;
+    color: var(--fg-3); pointer-events: none;
+    font-style: normal;
+  }
+  .input-icon-left  { left: 10px; }
+  .input-icon-right { right: 10px; }
+
+  /* Error state driven by attribute on wrap */
+  .input-wrap[error] > input { border-color: var(--danger-500); }
+  .input-wrap[error]::after {
+    content: attr(error);
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--danger-500);
+  }
+
+  /* Radio group */
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--fg-1); cursor: pointer; user-select: none; }
+  .radio input { position: absolute; opacity: 0; pointer-events: none; }
+  .radio .dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-2); background: #fff; display: grid; place-items: center; transition: border-color var(--dur-fast), background var(--dur-fast); flex-shrink: 0; }
+  .radio .dot::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; transform: scale(0); transition: transform var(--dur-fast) var(--ease-out); }
+  .radio input:checked + .dot { border-color: var(--primary-600); background: var(--primary-600); }
+  .radio input:checked + .dot::after { transform: scale(1); }
+  .radio input:focus-visible + .dot { box-shadow: var(--shadow-ring); }
+
+  /* Slider */
+  .slider-row { display: flex; align-items: center; gap: 12px; }
+  .slider { -webkit-appearance: none; appearance: none; flex: 1; height: 4px; border-radius: 999px; background: linear-gradient(to right, var(--primary-600) 0 var(--val, 60%), var(--neutral-100) var(--val, 60%) 100%); outline: none; }
+  .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--primary-600); box-shadow: var(--shadow-1); cursor: pointer; }
+  .slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--primary-600); box-shadow: var(--shadow-1); cursor: pointer; }
+  .slider-val { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 600; color: var(--fg-1); min-width: 44px; text-align: right; padding: 4px 8px; background: #fff; border: 1px solid var(--border-2); border-radius: var(--radius-xs); }
+
+  /* Dropdown + datepicker popovers — anchored to .input-wrap */
+  .dd > input { cursor: text; }
+  .dp > input { cursor: pointer; }
+  .dd-pop, .dp-pop { position: absolute; top: calc(100% + 4px); background: #fff; border: 1px solid var(--border-2); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); z-index: 10; }
+  .dd-pop { left: 0; right: 0; max-height: 220px; overflow-y: auto; padding: 4px; }
+  .dp-pop { left: 0; width: 256px; padding: 12px; }
+  .dd-pop[hidden], .dp-pop[hidden] { display: none; }
+  .dd-opt { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; font-size: 14px; color: var(--fg-1); border-radius: var(--radius-xs); cursor: pointer; user-select: none; }
+  .dd-opt:hover, .dd-opt.is-active { background: var(--neutral-50); }
+  .dd-opt.is-selected { color: var(--primary-700); font-weight: 500; }
+  .dd-opt mark { background: var(--primary-50); color: var(--primary-700); padding: 0; }
+  .dd-check { color: var(--primary-600); font-size: 14px; visibility: hidden; }
+  .dd-opt.is-selected .dd-check { visibility: visible; }
+  .dd-empty { padding: 10px; font-size: 13px; color: var(--fg-3); text-align: center; }
+  .dp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .dp-title { font-size: 13px; font-weight: 600; color: var(--fg-1); }
+  .dp-nav { display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--radius-xs); cursor: pointer; color: var(--fg-2); background: transparent; border: 0; }
+  .dp-nav:hover { background: var(--neutral-50); color: var(--fg-1); }
+  .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .dp-dow { font-size: 10px; font-weight: 600; color: var(--fg-3); text-transform: uppercase; text-align: center; padding: 4px 0; }
+  .dp-day { font-size: 12px; color: var(--fg-1); height: 28px; display: grid; place-items: center; border-radius: var(--radius-xs); cursor: pointer; user-select: none; font-variant-numeric: tabular-nums; }
+  .dp-day:hover { background: var(--neutral-50); }
+  .dp-day.muted { color: var(--fg-3); }
+  .dp-day.today { box-shadow: inset 0 0 0 1px var(--border-2); }
+  .dp-day.selected { background: var(--primary-600); color: #fff; font-weight: 600; }
+  .dp-day.selected:hover { background: var(--primary-700); }
+</style>
+</head>
+<body>
+  <div class="field">
+    <label for="f-email">Email</label>
+    <div class="input-wrap">
+      <i class="input-icon-left">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="M3 6l7 5 7-5"/></svg>
+      </i>
+      <input id="f-email" type="email" value="alex@company.com">
+    </div>
+    <span class="hint">We'll never share this.</span>
+  </div>
+
+  <div class="field">
+    <label for="f-ws">Workspace name</label>
+    <div class="input-wrap" error="Name is required.">
+      <input id="f-ws" value="">
+    </div>
+  </div>
+
+  <div class="field dd" id="role-dd">
+    <label for="f-role">Role</label>
+    <div class="input-wrap">
+      <input id="f-role" type="text" readonly value="Member" aria-haspopup="listbox" aria-expanded="false" placeholder="Select a role…">
+      <i class="input-icon-right">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg>
+      </i>
+      <div class="dd-pop" role="listbox" hidden></div>
+    </div>
+    <span class="hint">Type to filter options.</span>
+  </div>
+
+  <div class="field dp" id="start-dp">
+    <label for="f-date">Start date</label>
+    <div class="input-wrap">
+      <input id="f-date" type="text" readonly value="Mar 14, 2025" placeholder="Pick a date…">
+      <i class="input-icon-right">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="12" rx="2"/><path d="M3 8h14M7 3v3M13 3v3"/></svg>
+      </i>
+      <div class="dp-pop" hidden></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Notification frequency</label>
+    <div class="radio-group" id="freq-group">
+      <label class="radio"><input type="radio" name="freq" value="realtime"><span class="dot"></span>Real-time</label>
+      <label class="radio"><input type="radio" name="freq" value="daily" checked><span class="dot"></span>Daily digest</label>
+      <label class="radio"><input type="radio" name="freq" value="weekly"><span class="dot"></span>Weekly summary</label>
+      <label class="radio"><input type="radio" name="freq" value="off"><span class="dot"></span>Off</label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="storage">Storage limit</label>
+    <div class="slider-row">
+      <input type="range" class="slider" id="storage" min="0" max="100" value="60">
+      <span class="slider-val" id="storage-val">60 GB</span>
+    </div>
+    <span class="hint">Maximum space this workspace can use.</span>
+  </div>
+
+  <div class="field">
+    <label class="check"><input type="checkbox" checked> Send me product updates</label>
+    <label class="check"><input type="checkbox"> Enable two-factor auth</label>
+  </div>
+
+<script>
+/* Dropdown */
+(() => {
+  const OPTIONS = ['Owner', 'Admin', 'Member', 'Billing manager', 'Developer', 'Support agent', 'Guest'];
+  const root = document.getElementById('role-dd');
+  const input = root.querySelector('input');
+  const pop = root.querySelector('.dd-pop');
+  let selected = 'Member', query = '', active = 0, open = false;
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const hl = (t, q) => q ? t.replace(new RegExp('(' + esc(q) + ')', 'ig'), '<mark>$1</mark>') : t;
+  const filtered = () => !query ? OPTIONS : OPTIONS.filter(o => o.toLowerCase().includes(query.toLowerCase()));
+  function render() {
+    const list = filtered();
+    pop.innerHTML = !list.length
+      ? '<div class="dd-empty">No matches</div>'
+      : list.map((o, i) => `<div class="dd-opt ${o === selected ? 'is-selected' : ''} ${i === active ? 'is-active' : ''}" data-val="${o}" role="option"><span>${hl(o, query)}</span><span class="dd-check">✓</span></div>`).join('');
+  }
+  function show() { open = true; pop.hidden = false; input.setAttribute('aria-expanded','true'); input.removeAttribute('readonly'); query = ''; active = Math.max(0, filtered().indexOf(selected)); input.value = ''; input.placeholder = selected; render(); }
+  function hide() { open = false; pop.hidden = true; input.setAttribute('aria-expanded','false'); input.setAttribute('readonly',''); input.value = selected; input.placeholder = 'Select a role…'; }
+  function choose(v) { selected = v; hide(); }
+  input.addEventListener('focus', show);
+  input.addEventListener('click', () => { if (!open) show(); });
+  input.addEventListener('input', e => { query = e.target.value; active = 0; render(); });
+  input.addEventListener('keydown', e => {
+    const list = filtered();
+    if (e.key === 'ArrowDown') { e.preventDefault(); active = (active + 1) % list.length; render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); active = (active - 1 + list.length) % list.length; render(); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (list[active]) choose(list[active]); }
+    else if (e.key === 'Escape') { e.preventDefault(); hide(); input.blur(); }
+  });
+  pop.addEventListener('mousedown', e => { const opt = e.target.closest('.dd-opt'); if (opt) { e.preventDefault(); choose(opt.dataset.val); } });
+  document.addEventListener('mousedown', e => { if (open && !root.contains(e.target)) hide(); });
+})();
+
+/* Slider */
+(() => {
+  const s = document.getElementById('storage');
+  const v = document.getElementById('storage-val');
+  const update = () => { v.textContent = s.value + ' GB'; s.style.setProperty('--val', s.value + '%'); };
+  s.addEventListener('input', update);
+  update();
+})();
+
+/* Datepicker */
+(() => {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW = ['S','M','T','W','T','F','S'];
+  const root = document.getElementById('start-dp');
+  const input = root.querySelector('input');
+  const pop = root.querySelector('.dp-pop');
+  let selected = new Date(2025, 2, 14);
+  let view = new Date(selected.getFullYear(), selected.getMonth(), 1);
+  let open = false;
+  const fmt = d => `${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}, ${d.getFullYear()}`;
+  const sameDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  function render() {
+    const y = view.getFullYear(), m = view.getMonth();
+    const startOffset = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const daysInPrev = new Date(y, m, 0).getDate();
+    const today = new Date();
+    let cells = '';
+    for (let i = startOffset - 1; i >= 0; i--) cells += `<div class="dp-day muted" data-disabled>${daysInPrev - i}</div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cur = new Date(y, m, d);
+      const cls = ['dp-day'];
+      if (sameDay(cur, today)) cls.push('today');
+      if (sameDay(cur, selected)) cls.push('selected');
+      cells += `<div class="${cls.join(' ')}" data-d="${d}">${d}</div>`;
+    }
+    const remainder = (7 - ((startOffset + daysInMonth) % 7)) % 7;
+    for (let i = 1; i <= remainder; i++) cells += `<div class="dp-day muted" data-disabled>${i}</div>`;
+    pop.innerHTML = `
+      <div class="dp-head">
+        <button class="dp-nav" data-nav="-1" aria-label="Previous month"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l-5 5 5 5"/></svg></button>
+        <span class="dp-title">${MONTHS[m]} ${y}</span>
+        <button class="dp-nav" data-nav="1" aria-label="Next month"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></button>
+      </div>
+      <div class="dp-grid">${DOW.map(d => `<div class="dp-dow">${d}</div>`).join('')}${cells}</div>`;
+  }
+  function show() { open = true; pop.hidden = false; view = new Date(selected.getFullYear(), selected.getMonth(), 1); render(); }
+  function hide() { open = false; pop.hidden = true; }
+  input.addEventListener('click', () => open ? hide() : show());
+  input.addEventListener('focus', show);
+  pop.addEventListener('click', e => {
+    const nav = e.target.closest('.dp-nav');
+    if (nav) { view = new Date(view.getFullYear(), view.getMonth() + parseInt(nav.dataset.nav, 10), 1); render(); return; }
+    const day = e.target.closest('.dp-day');
+    if (day && !day.hasAttribute('data-disabled')) {
+      selected = new Date(view.getFullYear(), view.getMonth(), parseInt(day.dataset.d, 10));
+      input.value = fmt(selected);
+      hide();
+    }
+  });
+  document.addEventListener('mousedown', e => { if (open && !root.contains(e.target)) hide(); });
+})();
+</script>
+</body>
+</html>

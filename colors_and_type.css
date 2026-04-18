@@ -1,0 +1,301 @@
+/* ============================================================
+   Webdesign System — Foundations
+   Colors, typography, spacing, radii, shadows, motion.
+   All theme-configurable via CSS custom properties.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/Roboto-VariableFont_wdth_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/Roboto-Italic-VariableFont_wdth_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* --- Color scales ---------------------------------------- */
+  /* Neutrals (warm slate) */
+  --neutral-50:  #fafaf9;
+  --neutral-100: #f4f4f2;
+  --neutral-200: #e8e8e4;
+  --neutral-300: #d4d4cf;
+  --neutral-400: #a3a39d;
+  --neutral-500: #73736d;
+  --neutral-600: #52524d;
+  --neutral-700: #3a3a36;
+  --neutral-800: #22221f;
+  --neutral-900: #111110;
+
+  /* Primary — indigo */
+  --primary-50:  #eef1ff;
+  --primary-100: #e0e5ff;
+  --primary-200: #c7d0ff;
+  --primary-300: #a4b1ff;
+  --primary-400: #7b87fa;
+  --primary-500: #5b63ef;
+  --primary-600: #4741d8;
+  --primary-700: #3a33b3;
+  --primary-800: #2f2b8f;
+  --primary-900: #1f1c5c;
+
+  /* Semantic */
+  --success-500: #16a34a;
+  --success-100: #dcfce7;
+  --warning-500: #d97706;
+  --warning-100: #fef3c7;
+  --danger-500:  #dc2626;
+  --danger-100:  #fee2e2;
+  --info-500:    #0284c7;
+  --info-100:    #e0f2fe;
+
+  /* --- Semantic surface / text tokens --------------------- */
+  --bg:         var(--neutral-50);
+  --bg-elev-1:  #ffffff;
+  --bg-elev-2:  #ffffff;
+  --bg-muted:   var(--neutral-100);
+  --bg-inverse: var(--neutral-900);
+
+  --fg-1:       var(--neutral-900); /* primary text */
+  --fg-2:       var(--neutral-700); /* secondary text */
+  --fg-3:       var(--neutral-500); /* tertiary / meta */
+  --fg-4:       var(--neutral-400); /* disabled / placeholder */
+  --fg-inverse: var(--neutral-50);
+  --fg-link:    var(--primary-600);
+
+  --border-1:   var(--neutral-200);
+  --border-2:   var(--neutral-300);
+  --border-strong: var(--neutral-400);
+
+  --accent:        var(--primary-600);
+  --accent-hover:  var(--primary-700);
+  --accent-soft:   var(--primary-50);
+  --accent-fg:     #ffffff;
+  --focus-ring:    var(--primary-400);
+
+  /* --- Type ------------------------------------------------ */
+  --font-sans:    'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif:   'Instrument Serif', ui-serif, Georgia, serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  /* Fluid-ish scale (1.2 ratio) */
+  --text-xs:   0.75rem;   /* 12 */
+  --text-sm:   0.875rem;  /* 14 */
+  --text-base: 1rem;      /* 16 */
+  --text-md:   1.125rem;  /* 18 */
+  --text-lg:   1.25rem;   /* 20 */
+  --text-xl:   1.5rem;    /* 24 */
+  --text-2xl:  1.875rem;  /* 30 */
+  --text-3xl:  2.25rem;   /* 36 */
+  --text-4xl:  3rem;      /* 48 */
+  --text-5xl:  3.75rem;   /* 60 */
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-loose:  1.75;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.04em;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+
+  /* --- Spacing (Fibonacci: each step = sum of two previous) --- */
+  --space-0:  0;
+  --space-1:  4px;   /* 4  */
+  --space-2:  8px;   /* 8  */
+  --space-3:  12px;  /* 4 + 8  */
+  --space-4:  20px;  /* 8 + 12 */
+  --space-5:  32px;  /* 12 + 20 */
+  --space-6:  52px;  /* 20 + 32 */
+  --space-7:  84px;  /* 32 + 52 */
+  --space-8:  136px; /* 52 + 84 */
+  --space-9:  220px; /* 84 + 136 */
+  --space-10: 356px; /* 136 + 220 */
+
+  /* --- Radii (Fibonacci) ----------------------------------- */
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  32px;
+  --radius-2xl: 52px;
+  --radius-full: 9999px;
+
+  /* --- Shadows (soft, layered) ----------------------------- */
+  --shadow-xs: 0 1px 2px rgba(17, 17, 16, 0.04);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 16, 0.04), 0 2px 4px rgba(17, 17, 16, 0.04);
+  --shadow-md: 0 2px 4px rgba(17, 17, 16, 0.04), 0 6px 12px rgba(17, 17, 16, 0.06);
+  --shadow-lg: 0 4px 8px rgba(17, 17, 16, 0.05), 0 12px 24px rgba(17, 17, 16, 0.08);
+  --shadow-xl: 0 8px 16px rgba(17, 17, 16, 0.06), 0 24px 48px rgba(17, 17, 16, 0.12);
+  --shadow-ring: 0 0 0 3px rgba(91, 99, 239, 0.18);
+  --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(17,17,16,0.04);
+
+  /* --- Motion --------------------------------------------- */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:    cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --dur-fast:   120ms;
+  --dur-base:   200ms;
+  --dur-slow:   320ms;
+  --dur-slower: 500ms;
+
+  /* --- Layout --------------------------------------------- */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+
+  --z-base:   1;
+  --z-sticky: 100;
+  --z-overlay: 800;
+  --z-modal:  900;
+  --z-toast:  1000;
+}
+
+/* Dark theme — swap surface/text tokens only */
+[data-theme="dark"] {
+  --bg:         #0e0e0c;
+  --bg-elev-1:  #19191704;
+  --bg-elev-1:  #1a1a17;
+  --bg-elev-2:  #22221f;
+  --bg-muted:   #1a1a17;
+  --bg-inverse: var(--neutral-50);
+
+  --fg-1:       #f4f4f2;
+  --fg-2:       #c9c9c3;
+  --fg-3:       #8f8f88;
+  --fg-4:       #5a5a54;
+  --fg-inverse: var(--neutral-900);
+
+  --border-1:   #2a2a26;
+  --border-2:   #3a3a36;
+  --border-strong: #52524d;
+
+  --accent:       var(--primary-400);
+  --accent-hover: var(--primary-300);
+  --accent-soft:  rgba(91, 99, 239, 0.12);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.25);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.3), 0 6px 12px rgba(0,0,0,0.35);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,0.4), 0 12px 24px rgba(0,0,0,0.5);
+  --shadow-xl: 0 8px 16px rgba(0,0,0,0.4), 0 24px 48px rgba(0,0,0,0.55);
+}
+
+/* ============================================================
+   Semantic type classes  — use these in product code
+   ============================================================ */
+.display-1, h1.display {
+  font-family: var(--font-serif);
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-regular);
+  color: var(--fg-1);
+}
+h1, .h1 {
+  font-family: var(--font-sans);
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+h2, .h2 {
+  font-family: var(--font-sans);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+h3, .h3 {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+h4, .h4 {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+h5, .h5 {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+p, .body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--fg-2);
+}
+.body-lg {
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--fg-2);
+}
+.body-sm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--fg-2);
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--fg-3);
+}
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+code, .code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-xs);
+  padding: 0.1em 0.35em;
+  color: var(--fg-1);
+}
+a {
+  color: var(--fg-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+a:hover { border-bottom-color: currentColor; }
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

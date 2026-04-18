@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 24px 20px; font-family: var(--font-sans); }
+  .row { display:flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .row:last-child { margin-bottom: 0; }
+  .col-label { font-family: var(--font-mono); font-size: 10px; color: var(--fg-3); text-transform: uppercase; min-width: 68px; }
+
+  /* Base: white bg, colored text + border.
+     Selected: white bg stays, tinted fill + same colored border. */
+  .btn {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    padding: 9px 16px;
+    background: #fff;
+    border: 1.5px solid;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .btn-primary  { color: var(--primary-600); border-color: var(--primary-600); }
+  .btn-primary:hover  { background: var(--primary-50); }
+  .btn-primary.is-selected  { background: var(--primary-600);  color: #fff;  border-color: var(--primary-600); }
+
+  .btn-neutral  { color: var(--fg-1); border-color: var(--border-2); }
+  .btn-neutral:hover  { background: var(--neutral-50); }
+  .btn-neutral.is-selected  { background: var(--fg-1); color: #fff; border-color: var(--fg-1); }
+
+  .btn-success  { color: var(--success-500); border-color: var(--success-500); }
+  .btn-success:hover  { background: color-mix(in oklch, var(--success-500) 10%, #fff); }
+  .btn-success.is-selected  { background: var(--success-500); color: #fff; border-color: var(--success-500); }
+
+  .btn-danger  { color: var(--danger-500); border-color: var(--danger-500); }
+  .btn-danger:hover  { background: color-mix(in oklch, var(--danger-500) 8%, #fff); }
+  .btn-danger.is-selected  { background: var(--danger-500); color: #fff; border-color: var(--danger-500); }
+
+  .btn-sm { padding: 5px 12px; font-size: 13px; border-radius: var(--radius-sm); }
+  .btn-lg { padding: 13px 22px; font-size: 15px; border-radius: var(--radius-md); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <span class="col-label">Default</span>
+    <button class="btn btn-primary">Primary</button>
+    <button class="btn btn-neutral">Neutral</button>
+    <button class="btn btn-success">Success</button>
+    <button class="btn btn-danger">Danger</button>
+  </div>
+  <div class="row">
+    <span class="col-label">Selected</span>
+    <button class="btn btn-primary is-selected">Primary</button>
+    <button class="btn btn-neutral is-selected">Neutral</button>
+    <button class="btn btn-success is-selected">Success</button>
+    <button class="btn btn-danger is-selected">Danger</button>
+  </div>
+  <div class="row">
+    <span class="col-label">Sizes</span>
+    <button class="btn btn-primary btn-sm">Small</button>
+    <button class="btn btn-primary">Default</button>
+    <button class="btn btn-primary btn-lg">Large</button>
+    <button class="btn btn-primary btn-lg is-selected">Large · selected</button>
+  </div>
+</body>
+</html>

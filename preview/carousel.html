@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg-elev-1); }
+  body { padding: 16px 20px; font-family: var(--font-sans); }
+  .car { position: relative; border: 1px solid var(--border-1); border-radius: 14px; overflow: hidden; }
+  .viewport { overflow: hidden; touch-action: pan-y; cursor: grab; }
+  .viewport.is-dragging { cursor: grabbing; }
+  .track { display: flex; transition: transform var(--dur-slow) var(--ease-out); will-change: transform; }
+  .track.is-dragging { transition: none; }
+  .slide > * { pointer-events: none; user-select: none; }
+  .slide { flex: 0 0 100%; box-sizing: border-box; height: 180px; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+  .s1 { background: linear-gradient(135deg, var(--primary-100), var(--neutral-100)); }
+  .s2 { background: linear-gradient(135deg, var(--neutral-200), var(--neutral-100)); }
+  .s3 { background: linear-gradient(135deg, var(--warning-100), var(--neutral-100)); }
+  .s4 { background: linear-gradient(135deg, var(--success-100), var(--neutral-100)); }
+  .eyebrow { font-size: 10px; color: var(--fg-3); font-weight: 600; text-transform: uppercase; }
+  .h { font-size: 20px; font-weight: 600; color: var(--fg-1); margin-top: 6px; max-width: 70%; }
+  .dots { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: rgba(17,17,16,0.18); border: 0; padding: 0; cursor: pointer; transition: all var(--dur-fast) var(--ease-out); }
+  .dot.active { background: var(--primary-600); width: 18px; }
+  .arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 999px; background: rgba(255,255,255,0.92); border: 1px solid var(--border-1); box-shadow: var(--shadow-sm); display:flex; align-items:center; justify-content:center; cursor: pointer; font-size: 16px; color: var(--fg-1); padding: 0; }
+  .arrow:hover { background: #fff; }
+  .prev { left: 10px; } .next { right: 10px; }
+</style>
+</head>
+<body>
+  <div class="car" id="car">
+    <div class="viewport">
+      <div class="track">
+        <div class="slide s1"><span class="eyebrow">Featured</span><span class="h">Ship faster with shared components</span></div>
+        <div class="slide s2"><span class="eyebrow">What's new</span><span class="h">Linked tokens now sync across files</span></div>
+        <div class="slide s3"><span class="eyebrow">Guide</span><span class="h">Design a system teams actually use</span></div>
+        <div class="slide s4"><span class="eyebrow">Case study</span><span class="h">How Acme cut ship time 40%</span></div>
+      </div>
+    </div>
+    <button class="arrow prev" aria-label="Previous">‹</button>
+    <button class="arrow next" aria-label="Next">›</button>
+    <div class="dots">
+      <button class="dot active" data-i="0" aria-label="Slide 1"></button>
+      <button class="dot" data-i="1" aria-label="Slide 2"></button>
+      <button class="dot" data-i="2" aria-label="Slide 3"></button>
+      <button class="dot" data-i="3" aria-label="Slide 4"></button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const car = document.getElementById('car');
+  const viewport = car.querySelector('.viewport');
+  const track = car.querySelector('.track');
+  const dots = car.querySelectorAll('.dot');
+  const total = car.querySelectorAll('.slide').length;
+  let i = 0;
+  function go(n) {
+    i = (n + total) % total;
+    track.style.transform = `translateX(-${i * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+  }
+  car.querySelector('.prev').addEventListener('click', () => go(i - 1));
+  car.querySelector('.next').addEventListener('click', () => go(i + 1));
+  dots.forEach(d => d.addEventListener('click', () => go(parseInt(d.dataset.i, 10))));
+
+  /* Drag: pointer events cover mouse, touch, and pen */
+  let dragging = false, startX = 0, dx = 0, width = 0;
+  const THRESHOLD = 0.18; // fraction of slide width to trigger advance
+
+  viewport.addEventListener('pointerdown', (e) => {
+    // ignore drags that originate on the arrow/dot controls
+    if (e.target.closest('.arrow, .dot')) return;
+    dragging = true;
+    startX = e.clientX;
+    dx = 0;
+    width = viewport.clientWidth;
+    track.classList.add('is-dragging');
+    viewport.classList.add('is-dragging');
+    viewport.setPointerCapture(e.pointerId);
+  });
+  viewport.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    dx = e.clientX - startX;
+    // rubber-band at the ends so you can’t drag past
+    let pct = (dx / width) * 100;
+    if ((i === 0 && dx > 0) || (i === total - 1 && dx < 0)) pct *= 0.35;
+    track.style.transform = `translateX(calc(-${i * 100}% + ${pct}%))`;
+  });
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('is-dragging');
+    viewport.classList.remove('is-dragging');
+    try { viewport.releasePointerCapture(e.pointerId); } catch {}
+    const ratio = dx / width;
+    if (ratio < -THRESHOLD) go(i + 1);
+    else if (ratio > THRESHOLD) go(i - 1);
+    else go(i); // snap back
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  // prevent the default image-drag ghost on Chrome/Firefox
+  viewport.addEventListener('dragstart', (e) => e.preventDefault());
+})();
+</script>
+</body>
+</html>

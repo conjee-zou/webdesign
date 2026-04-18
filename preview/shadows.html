@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--bg); }
+  body { padding: 28px 20px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .card { width: 88px; height: 64px; background: var(--bg-elev-1); border-radius: 10px; border: 1px solid var(--border-1); }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--fg-3); }
+  .val { font-family: var(--font-sans); font-size: 12px; color: var(--fg-1); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="item"><div class="card" style="box-shadow: var(--shadow-xs)"></div><span class="val">xs</span><span class="lbl">subtle</span></div>
+    <div class="item"><div class="card" style="box-shadow: var(--shadow-sm)"></div><span class="val">sm</span><span class="lbl">cards</span></div>
+    <div class="item"><div class="card" style="box-shadow: var(--shadow-md)"></div><span class="val">md</span><span class="lbl">menus</span></div>
+    <div class="item"><div class="card" style="box-shadow: var(--shadow-lg)"></div><span class="val">lg</span><span class="lbl">dialogs</span></div>
+    <div class="item"><div class="card" style="box-shadow: var(--shadow-xl)"></div><span class="val">xl</span><span class="lbl">overlays</span></div>
+  </div>
+</body>
+</html>

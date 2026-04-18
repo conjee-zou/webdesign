@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { background: var(--neutral-100); }
+  body { padding: 30px; display: flex; align-items: center; justify-content: center; }
+  .dialog { width: 420px; background: var(--bg-elev-1); border-radius: 20px; box-shadow: var(--shadow-xl); border: 1px solid var(--border-1); padding: 24px; }
+  .icon { width: 40px; height: 40px; border-radius: 10px; background: var(--danger-100); color: var(--danger-500); display:flex; align-items:center; justify-content:center; font-weight:700; margin-bottom: 12px; }
+  h3 { margin: 0 0 6px; font-size: 18px; font-weight: 600; color: var(--fg-1); }
+  p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+  .btn { font-family: var(--font-sans); font-size: 14px; font-weight: 500; border-radius: 10px; padding: 9px 16px; border: 1px solid transparent; cursor: pointer; }
+  .btn-sec { background: var(--bg-elev-1); color: var(--fg-1); border-color: var(--border-2); }
+  .btn-dan { background: var(--danger-500); color: #fff; }
+</style>
+</head>
+<body>
+  <div class="dialog">
+    <div class="icon">!</div>
+    <h3>Delete project?</h3>
+    <p>This will permanently remove "Alpha site" and all of its 42 pages. This can't be undone.</p>
+    <div class="actions">
+      <button class="btn btn-sec">Cancel</button>
+      <button class="btn btn-dan">Delete project</button>
+    </div>
+  </div>
+</body>
+</html>

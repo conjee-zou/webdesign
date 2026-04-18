@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webdesign UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="Primitives.jsx"></script>
+  <script type="text/babel" src="FormExtras.jsx"></script>
+  <script type="text/babel" src="Header.jsx"></script>
+  <script type="text/babel" src="Footer.jsx"></script>
+  <script type="text/babel" src="Hero.jsx"></script>
+  <script type="text/babel" src="Welcome.jsx"></script>
+  <script type="text/babel" src="Dialog.jsx"></script>
+  <script type="text/babel" src="Carousel.jsx"></script>
+  <script type="text/babel" src="DataViews.jsx"></script>
+  <script type="text/babel" src="DataTable.jsx"></script>
+  <script type="text/babel" src="Charts.jsx"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const MEMBERS = [
+      { id: 1, name: 'Alex Morgan', initials: 'AM', tone: 'primary', role: 'Admin', status: 'Active', last: '2 min ago' },
+      { id: 2, name: 'Jamie Kwon', initials: 'JK', tone: 'warning', role: 'Editor', status: 'Active', last: '3 hours ago' },
+      { id: 3, name: 'Riya Shah', initials: 'RS', tone: 'neutral', role: 'Viewer', status: 'Invited', last: '—' },
+      { id: 4, name: 'Dana Liu', initials: 'DL', tone: 'primary', role: 'Editor', status: 'Active', last: 'yesterday' },
+      { id: 5, name: 'Marc Oliveira', initials: 'MO', tone: 'neutral', role: 'Viewer', status: 'Active', last: '2 days ago' },
+    ];
+
+    const LIST = [
+      { id: 'a', icon: '📁', name: 'Design system v2', meta: '12 pages · edited 4 min ago' },
+      { id: 'b', icon: '📁', name: 'Q2 roadmap', meta: 'Private · you' },
+      { id: 'c', icon: '📄', name: 'Onboarding notes', meta: 'Shared with 3 people' },
+      { id: 'd', icon: '📄', name: 'Launch copy review', meta: '8 comments' },
+    ];
+
+    const SLIDES = [
+      { eyebrow: 'Featured', title: 'Ship faster with shared components', text: 'A 60-piece kit your whole team can lean on — without re-inventing buttons every sprint.', bg: 'linear-gradient(135deg, var(--primary-100), var(--primary-50))' },
+      { eyebrow: 'Case study', title: 'How Northwind cut build time in half', text: 'Centralizing design tokens let their platform team re-theme every surface in one afternoon.', bg: 'linear-gradient(135deg, var(--neutral-200), var(--neutral-100))' },
+      { eyebrow: 'New', title: 'Dark mode, out of the box', text: 'A single `data-theme="dark"` attribute swaps every surface, token, and shadow.', bg: 'linear-gradient(135deg, var(--warning-100), var(--neutral-100))' },
+    ];
+
+    function App() {
+      const [tab, setTab] = useState('members');
+      const [selectedList, setSelectedList] = useState('a');
+      const [page, setPage] = useState(2);
+      const [dialogOpen, setDialogOpen] = useState(false);
+      const [theme, setTheme] = useState('light');
+      const [form, setForm] = useState({ email: 'alex@company.com', workspace: '', notify: true });
+      const [errors, setErrors] = useState({});
+      // Extended form state
+      const [plan, setPlan] = useState('team');
+      const [perms, setPerms] = useState({ edit: true, share: true, admin: false });
+      const [two, setTwo] = useState(true);
+      const [budget, setBudget] = useState(45);
+      const [region, setRegion] = useState('us-east');
+      const [dueDate, setDueDate] = useState(new Date(2026, 4, 12));
+      const [city, setCity] = useState('');
+
+      React.useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, [theme]);
+
+      const submitForm = () => {
+        const errs = {};
+        if (!form.workspace.trim()) errs.workspace = 'Workspace name is required.';
+        setErrors(errs);
+        if (Object.keys(errs).length === 0) setDialogOpen(true);
+      };
+
+      const columns = [
+        { key: 'member', label: 'Member', render: r => <div className="wd-who"><Avatar initials={r.initials} tone={r.tone} /> {r.name}</div> },
+        { key: 'role', label: 'Role' },
+        { key: 'status', label: 'Status', render: r => <Badge tone={r.status === 'Active' ? 'success' : 'neutral'}>{r.status}</Badge> },
+        { key: 'last', label: 'Last active' },
+      ];
+
+      // Extended table data & columns
+      const ORDERS = [
+        { id: 'o1', order: '#10482', customer: 'Northwind Inc.', amount: 1240, status: 'Paid', date: '2026-04-12' },
+        { id: 'o2', order: '#10483', customer: 'Globex Corp.', amount: 860, status: 'Pending', date: '2026-04-13' },
+        { id: 'o3', order: '#10484', customer: 'Acme LLC', amount: 3210, status: 'Paid', date: '2026-04-14' },
+        { id: 'o4', order: '#10485', customer: 'Initech', amount: 540, status: 'Refunded', date: '2026-04-14' },
+        { id: 'o5', order: '#10486', customer: 'Umbrella Co.', amount: 1980, status: 'Paid', date: '2026-04-15' },
+        { id: 'o6', order: '#10487', customer: 'Stark Industries', amount: 4420, status: 'Pending', date: '2026-04-15' },
+      ];
+      const statusTone = { Paid: 'success', Pending: 'warning', Refunded: 'neutral' };
+      const dtColumns = [
+        { key: 'order', label: 'Order' },
+        { key: 'customer', label: 'Customer' },
+        { key: 'amount', label: 'Amount', render: r => <span style={{fontVariantNumeric:'tabular-nums'}}>${r.amount.toLocaleString()}</span> },
+        { key: 'status', label: 'Status', render: r => <Badge tone={statusTone[r.status]}>{r.status}</Badge> },
+        { key: 'date', label: 'Date', render: r => <span style={{color:'var(--fg-3)'}}>{r.date}</span> },
+      ];
+
+      const CITIES = ['San Francisco','San Diego','San Jose','Seattle','Austin','Atlanta','Boston','Berlin','Barcelona','London','Lisbon','Los Angeles','Toronto','Tokyo','Singapore','Sydney','New York','Paris','Madrid','Mumbai','Mexico City'];
+
+      const REVENUE = [
+        { x: 'Mon', y: 32 }, { x: 'Tue', y: 48 }, { x: 'Wed', y: 41 },
+        { x: 'Thu', y: 58 }, { x: 'Fri', y: 72 }, { x: 'Sat', y: 61 }, { x: 'Sun', y: 80 },
+      ];
+      const CHANNELS = [
+        { x: 'Direct', y: 42 }, { x: 'Search', y: 58, highlight: true },
+        { x: 'Social', y: 26 }, { x: 'Email', y: 34 }, { x: 'Referral', y: 18 },
+      ];
+      const DONUT = [
+        { label: 'Free', value: 284, color: 'var(--neutral-300)' },
+        { label: 'Team', value: 412, color: 'var(--primary-500)' },
+        { label: 'Business', value: 164, color: 'var(--primary-700)' },
+        { label: 'Enterprise', value: 58, color: 'var(--warning-500)' },
+      ];
+
+      return (
+        <>
+          <Header onNav={() => {}} />
+          <Hero />
+
+          {/* Feature cards */}
+          <section className="wd-section">
+            <div className="wd-container">
+              <div className="wd-section-head">
+                <span className="wd-eyebrow wd-section-eyebrow">Built for product teams</span>
+                <h2 className="wd-section-title">Everything you need, nothing you don't</h2>
+                <p className="wd-section-sub">A tight, opinionated set of components that feel right together. No kitchen-sink fatigue.</p>
+              </div>
+              <div className="wd-grid-3">
+                <Card interactive>
+                  <div className="wd-feature-thumb"></div>
+                  <div className="wd-feature-title">Token-driven theme</div>
+                  <p className="wd-feature-desc">Re-skin the entire kit by editing a single CSS file. No build step.</p>
+                </Card>
+                <Card interactive>
+                  <div className="wd-feature-thumb t2"></div>
+                  <div className="wd-feature-title">Responsive by default</div>
+                  <p className="wd-feature-desc">Every component degrades gracefully from 1440 down to 360 without tweaking.</p>
+                </Card>
+                <Card interactive>
+                  <div className="wd-feature-thumb t3"></div>
+                  <div className="wd-feature-title">Accessible focus states</div>
+                  <p className="wd-feature-desc">Visible focus halos on every interactive element, never suppressed.</p>
+                </Card>
+              </div>
+            </div>
+          </section>
+
+          {/* Carousel */}
+          <section className="wd-section" style={{paddingTop: 0}}>
+            <div className="wd-container">
+              <Carousel slides={SLIDES} />
+            </div>
+          </section>
+
+          {/* Workspace demo */}
+          <section className="wd-section" style={{background: 'var(--bg-muted)', borderTop: '1px solid var(--border-1)', borderBottom: '1px solid var(--border-1)'}}>
+            <div className="wd-container">
+              <div className="wd-section-head" style={{textAlign: 'left', margin: '0 0 24px'}}>
+                <span className="wd-eyebrow wd-section-eyebrow">Interactive demo</span>
+                <h2 className="wd-section-title" style={{fontSize: 28, marginBottom: 4}}>Workspace</h2>
+                <p className="wd-section-sub">Click around — tabs, lists, pagination, dialog and form are all live.</p>
+              </div>
+
+              <div style={{display: 'grid', gridTemplateColumns: '300px 1fr', gap: 24}}>
+                <div>
+                  <h5 style={{margin: '0 0 10px', color: 'var(--fg-3)', fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600}}>Projects</h5>
+                  <List items={LIST} selectedId={selectedList} onSelect={setSelectedList} />
+                </div>
+                <div>
+                  <Tabs
+                    value={tab}
+                    onChange={setTab}
+                    items={[
+                      { id: 'overview', label: 'Overview' },
+                      { id: 'members', label: 'Members', count: MEMBERS.length },
+                      { id: 'activity', label: 'Activity' },
+                      { id: 'settings', label: 'Settings' },
+                    ]}
+                  />
+                  <div style={{paddingTop: 20}}>
+                    {tab === 'overview' && (
+                      <Welcome onInvite={() => setTab('members')} onCreate={() => setDialogOpen(true)} />
+                    )}
+                    {tab === 'members' && (
+                      <>
+                        <Table columns={columns} rows={MEMBERS} />
+                        <div style={{marginTop: 20}}>
+                          <Pagination page={page} total={28} onChange={setPage} />
+                        </div>
+                      </>
+                    )}
+                    {tab === 'activity' && (
+                      <Card>
+                        <p style={{margin: 0, color: 'var(--fg-2)'}}>No recent activity yet. Invite a teammate to start seeing edits here.</p>
+                      </Card>
+                    )}
+                    {tab === 'settings' && (
+                      <Card>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start'}}>
+                          <Input label="Email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} hint="We'll never share this." />
+                          <Input label="Workspace name" value={form.workspace} error={errors.workspace} onChange={e => setForm({...form, workspace: e.target.value})} />
+                          <Dropdown
+                            label="Region"
+                            value={region}
+                            onChange={setRegion}
+                            options={[
+                              { value: 'us-east', label: 'US East (N. Virginia)', icon: '🇺🇸' },
+                              { value: 'us-west', label: 'US West (Oregon)', icon: '🇺🇸' },
+                              { value: 'eu-central', label: 'EU Central (Frankfurt)', icon: '🇪🇺' },
+                              { value: 'ap-south', label: 'Asia Pacific (Singapore)', icon: '🇸🇬' },
+                            ]}
+                          />
+                          <DatePicker label="Next billing date" value={dueDate} onChange={setDueDate} />
+                          <Autocomplete label="Headquarters city" value={city} onChange={setCity} options={CITIES} />
+                          <Slider label="Monthly budget" value={budget} onChange={setBudget} min={0} max={200} step={5} format={v => `$${v}`} />
+                          <RadioGroup
+                            label="Plan"
+                            name="plan"
+                            value={plan}
+                            onChange={setPlan}
+                            options={[
+                              { value: 'starter', label: 'Starter — $0 · up to 3 members' },
+                              { value: 'team', label: 'Team — $29/mo · unlimited members' },
+                              { value: 'business', label: 'Business — custom · SSO + audit log' },
+                            ]}
+                          />
+                          <div className="wd-field">
+                            <label className="wd-label">Default permissions</label>
+                            <div style={{display:'flex', flexDirection:'column', gap:10, paddingTop:2}}>
+                              <Checkbox label="Members can edit pages" checked={perms.edit} onChange={e => setPerms({...perms, edit: e.target.checked})} />
+                              <Checkbox label="Members can share externally" checked={perms.share} onChange={e => setPerms({...perms, share: e.target.checked})} />
+                              <Checkbox label="Members are admins" checked={perms.admin} onChange={e => setPerms({...perms, admin: e.target.checked})} />
+                            </div>
+                          </div>
+                          <div className="wd-field">
+                            <label className="wd-label">Security</label>
+                            <div style={{display:'flex', flexDirection:'column', gap:10, paddingTop:6}}>
+                              <Switch label="Require two-factor auth" checked={two} onChange={setTwo} />
+                              <Switch label="Send me product updates" checked={form.notify} onChange={v => setForm({...form, notify: v})} />
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 20}}>
+                          <Button variant="secondary">Cancel</Button>
+                          <Button variant="primary" onClick={submitForm}>Save changes</Button>
+                        </div>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Analytics — charts + data table */}
+          <section className="wd-section" style={{background: 'var(--bg-muted)', borderTop: '1px solid var(--border-1)', borderBottom: '1px solid var(--border-1)'}}>
+            <div className="wd-container">
+              <div className="wd-section-head" style={{textAlign: 'left', margin: '0 0 24px'}}>
+                <span className="wd-eyebrow wd-section-eyebrow">Analytics</span>
+                <h2 className="wd-section-title" style={{fontSize: 28, marginBottom: 4}}>Revenue overview</h2>
+                <p className="wd-section-sub">Charts and a sortable, selectable data table — all built on tokens.</p>
+              </div>
+              <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap: 18, marginBottom: 20}}>
+                <LineChart label="Revenue · last 7 days" data={REVENUE} width={720} />
+                <DonutChart label="Subscribers by plan" data={DONUT} />
+              </div>
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap: 18, marginBottom: 24}}>
+                <BarChart label="Acquisition channels" data={CHANNELS} width={540} />
+                <Card>
+                  <div className="wd-chart-label" style={{marginBottom: 10}}>Key metrics</div>
+                  <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap: 16}}>
+                    <div><div style={{fontSize:12, color:'var(--fg-3)'}}>MRR</div><div style={{fontSize:24, fontWeight:700, color:'var(--fg-1)'}}>$48,210</div><Badge tone="success">+12.4%</Badge></div>
+                    <div><div style={{fontSize:12, color:'var(--fg-3)'}}>Active users</div><div style={{fontSize:24, fontWeight:700, color:'var(--fg-1)'}}>1,284</div><Badge tone="success">+4.1%</Badge></div>
+                    <div><div style={{fontSize:12, color:'var(--fg-3)'}}>Churn</div><div style={{fontSize:24, fontWeight:700, color:'var(--fg-1)'}}>2.1%</div><Badge tone="warning">+0.3%</Badge></div>
+                    <div><div style={{fontSize:12, color:'var(--fg-3)'}}>NPS</div><div style={{fontSize:24, fontWeight:700, color:'var(--fg-1)'}}>62</div><Badge tone="success">+3</Badge></div>
+                  </div>
+                </Card>
+              </div>
+              <DataTable columns={dtColumns} rows={ORDERS} onRowAction={() => {}} />
+            </div>
+          </section>
+
+          <section className="wd-section">
+            <div className="wd-container">
+              <div className="wd-section-head">
+                <span className="wd-eyebrow wd-section-eyebrow">Atoms</span>
+                <h2 className="wd-section-title">Badges & buttons</h2>
+              </div>
+              <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 24}}>
+                <Badge tone="neutral">Draft</Badge>
+                <Badge tone="primary">Active</Badge>
+                <Badge tone="success">Published</Badge>
+                <Badge tone="warning">Pending</Badge>
+                <Badge tone="danger">Failed</Badge>
+                <Badge tone="outline">v1.2.0</Badge>
+              </div>
+              <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center'}}>
+                <Button variant="primary">Save changes</Button>
+                <Button variant="secondary">Cancel</Button>
+                <Button variant="ghost">Learn more</Button>
+                <Button variant="danger">Delete</Button>
+                <Button variant="primary" size="lg">Large primary</Button>
+              </div>
+            </div>
+          </section>
+
+          <Footer />
+
+          <Dialog
+            open={dialogOpen}
+            title="Changes saved"
+            onClose={() => setDialogOpen(false)}
+            actions={<>
+              <Button variant="secondary" onClick={() => setDialogOpen(false)}>Dismiss</Button>
+              <Button variant="primary" onClick={() => setDialogOpen(false)}>Got it</Button>
+            </>}
+          >
+            Your workspace settings have been updated.
+          </Dialog>
+
+          {/* Theme toggle */}
+          <button
+            onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+            style={{position: 'fixed', right: 16, bottom: 16, padding: '10px 14px', borderRadius: 999, border: '1px solid var(--border-2)', background: 'var(--bg-elev-1)', color: 'var(--fg-1)', cursor: 'pointer', boxShadow: 'var(--shadow-md)', fontSize: 13, fontWeight: 500, fontFamily: 'var(--font-sans)', zIndex: 500}}
+          >
+            {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+          </button>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
